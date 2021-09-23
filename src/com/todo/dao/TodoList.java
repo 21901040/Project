@@ -36,7 +36,7 @@ public class TodoList {
 	}
 
 	public void listAll() {
-		System.out.println("\n"
+		System.out.println(""
 				+ "inside list_All method\n");
 		for (TodoItem myitem : list) {
 			System.out.println(myitem.getTitle() + myitem.getDesc());
