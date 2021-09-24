@@ -39,7 +39,7 @@ public class TodoList {
 		System.out.println(""
 				+ "inside list_All method\n");
 		for (TodoItem myitem : list) {
-			System.out.println(myitem.getTitle() + myitem.getDesc());
+			System.out.println(myitem.getCategory() + myitem.getTitle() + myitem.getDesc() + myitem.getDue_date());
 		}
 	}
 	

@@ -22,6 +22,7 @@ public class TodoMain {
 			Menu.displaymenu();
 			isList = false;
 			String choice = sc.next();
+			String search = sc.nextLine().trim();
 			switch (choice) {
 
 			case "add":
@@ -38,6 +39,10 @@ public class TodoMain {
 				
 			case "ls":
 				TodoUtil.listAll(l);
+				break;
+				
+			case "ls_cate":
+				TodoUtil.listCate(l);
 				break;
 
 			case "ls_name_asc":
@@ -61,9 +66,25 @@ public class TodoMain {
 				isList = true;
 				break;
 			
+			case "ls_date_desc":
+				l.sortByDate();
+				l.reverseList();
+				//
+				System.out.println("날짜역순으로 정렬되었습니다.");
+				isList = true;
+				break;
+				
 			case "help":
 				System.out.println("[사용방법]");
 				Menu.prompt();
+				break;
+			
+			case "find":
+				TodoUtil.find(l,search);
+				break;
+				
+			case "find_cate":
+				TodoUtil.find_cate(l,search);
 				break;
 
 			case "exit":
