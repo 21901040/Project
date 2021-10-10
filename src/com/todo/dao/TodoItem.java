@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TodoItem {
+	private int id;
     private String title;
     private String category;
     private String desc;
@@ -12,16 +13,24 @@ public class TodoItem {
     
     
 
-    public TodoItem(String category, String title, String desc, String due_date){
-        
+    public TodoItem(String title,  String desc, String category, String due_date){
     	this.title=title;
     	 this.category=category;
         this.desc=desc;
         this.due_date=due_date;
         SimpleDateFormat f = new SimpleDateFormat("yyyy/MM/dd kk:mm:ss");
         this.current_date= f.format(new Date());
+        
     }
-   
+    
+    public int getId() {
+    	return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    
     public String getTitle() {
         return title;
     }
@@ -66,6 +75,8 @@ public class TodoItem {
     public String toSaveString() {
     	return category+ "##" + title + "##" + desc + "##" + due_date+ "##" + current_date + "\n";
     }
-
-	
+    
+    public String toString() {
+    	return id + " ["+ category +"] " + title + " - " + desc + " - " + due_date + " - " + current_date;
+    }
 }

@@ -11,10 +11,11 @@ public class TodoMain {
 		
 		Scanner sc = new Scanner(System.in);
 		TodoList l = new TodoList();
+		l.importData("todolist.txt");
+		
 		boolean isList = false;
 		boolean quit = false;
 		
-		TodoUtil.loadList(l,"todolist.txt");
 		
 		//Menu.displaymenu();
 		do {//무한루프
@@ -22,7 +23,7 @@ public class TodoMain {
 			Menu.displaymenu();
 			isList = false;
 			String choice = sc.next();
-			String search = sc.nextLine().trim();
+			//String search = sc.nextLine().trim();
 			switch (choice) {
 
 			case "add":
@@ -41,58 +42,52 @@ public class TodoMain {
 				TodoUtil.listAll(l);
 				break;
 				
-			case "ls_cate":
-				TodoUtil.listCate(l);
-				break;
-
-			case "ls_name_asc":
-				l.sortByName();
+			case "ls_name":
 				System.out.println("제목순으로 정렬되었습니다.");
-				isList = true;
+				TodoUtil.listAll(l, "title" , 1);
 				break;
 
 			case "ls_name_desc":
-				l.sortByName();
-				l.reverseList();
-				//
 				System.out.println("제목역순으로 정렬되었습니다.");
-				isList = true;
+				TodoUtil.listAll(l, "title", 0);
 				break;
 				
 			case "ls_date":
-				l.sortByDate();
-				//
 				System.out.println("날짜순으로 정렬되었습니다.");
-				isList = true;
+				TodoUtil.listAll(l, "due_date", 1);
 				break;
 			
 			case "ls_date_desc":
-				l.sortByDate();
-				l.reverseList();
-				//
-				System.out.println("날짜역순으로 정렬되었습니다.");
-				isList = true;
+				System.out.println("날짜순으로 정렬되었습니다.");
+				TodoUtil.listAll(l, "due_date", 0);
 				break;
 				
+			/*	
 			case "help":
 				System.out.println("[사용방법]");
 				Menu.prompt();
 				break;
-			
+			*/
 			case "find":
-				TodoUtil.find(l,search);
+				String keyword = sc.nextLine().trim();
+				TodoUtil.findList(l,keyword);
 				break;
-				
+			
 			case "find_cate":
-				TodoUtil.find_cate(l,search);
+				String cate = sc.nextLine().trim();
+				TodoUtil.findCateList(l, cate);
+				break;	
+				
+			case "ls_cate":
+				TodoUtil.listCateAll(l);
 				break;
 
 			case "exit":
 				System.out.println("종료합니다.");
-				TodoUtil.saveList(l,"todolist.txt");
+				//TodoUtil.saveList(l,"todolist.txt");
 				quit = true;
 				break;
-
+				
 			default:
 				System.out.println("위에 제시된 명령어를 입력하세요. (도움말 - help)");
 				break;
