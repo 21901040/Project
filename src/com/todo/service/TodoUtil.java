@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
@@ -20,7 +21,8 @@ public class TodoUtil {
 	
 	public static void createItem(TodoList l) {
 		
-		String title, desc, category, due_date;
+		String title, desc, category, due_date, place, priority;
+		int is_completed;
 		Scanner sc = new Scanner(System.in);
 				
 		System.out.print("[항목 추가]\n" 
@@ -31,7 +33,7 @@ public class TodoUtil {
 			System.out.printf("제목이 중복됩니다!");
 			return;
 		}
-		
+		listCategory(l);
 		System.out.print("카테고리 > ");
 		category = sc.next();
 		sc.nextLine();
@@ -39,12 +41,42 @@ public class TodoUtil {
 		desc = sc.nextLine().trim();
 		System.out.print("마감일자 > ");
 		due_date = sc.nextLine().trim();
+		System.out.print("우선순위(1-5순위) > ");
+		priority = sc.nextLine().trim();
+		System.out.print("장소 > ");
+		place = sc.nextLine().trim();
+		System.out.print("완료여부 [Yes:1, No 0] > ");
+		is_completed = sc.nextInt();
 		
-		TodoItem t = new TodoItem(title, desc, category, due_date);
+		TodoItem t = new TodoItem(title, desc, category, place, priority, is_completed, due_date);
 		if(l.addItem(t) > 0)
 			System.out.println("*추가 되었습니다.*");
 	}
-    
+	
+	public static void addCate(TodoList l) {
+		String number, name_cate;
+		Scanner sc = new Scanner(System.in);
+		int index = l.getCountCate()+1;
+		number=String.valueOf(index);
+		listCategory(l);
+		System.out.print("추가할 카테고리 >");
+		name_cate = sc.next();
+		TodoItem c = new TodoItem(number, name_cate);
+	    if(l.addCategory(c) > 0) {
+	    	 listCategory(l);
+			System.out.println("*추가 되었습니다.*");
+	    }
+	   
+	}
+	
+	public static void listCategory(TodoList l) {
+		System.out.print("[");
+		for(TodoItem item: l.getCategory()) {
+			System.out.print(item.toCateString());
+	}
+		System.out.println(" ]");
+	}
+	
 	public static void deleteItem(TodoList l) {
 		
 		Scanner sc = new Scanner(System.in);
@@ -58,7 +90,8 @@ public class TodoUtil {
 
 	public static void updateItem(TodoList l) {
 		
-		String new_title, new_desc, new_category, new_due_date;
+		String new_title, new_desc, new_category, new_due_date,  new_place, new_priority;
+		int new_is_completed;
 		Scanner sc = new Scanner(System.in);
 		
 		System.out.print("[ 항목 수정 ]\n"
@@ -67,6 +100,7 @@ public class TodoUtil {
 		
 		System.out.print("새 제목 > ");
 		new_title = sc.next().trim();
+		listCategory(l);
 		System.out.print("새 카테고리 > ");
 		new_category = sc.next();
 		sc.nextLine();
@@ -74,20 +108,119 @@ public class TodoUtil {
 		new_desc = sc.nextLine().trim();
 		System.out.print("새 마감일자 > ");
 		new_due_date = sc.nextLine().trim();
-		
-		TodoItem t = new TodoItem(new_title, new_desc, new_category, new_due_date);
+		System.out.print("새 우선순위(1-5순위) > ");
+		new_priority = sc.nextLine().trim();
+		System.out.print("새 장소 > ");
+		new_place = sc.nextLine().trim();
+		System.out.print("완료여부 [Yes:1, No 0] > ");
+		new_is_completed = sc.nextInt();
+		TodoItem t = new TodoItem(new_title, new_desc, new_category, new_place, new_priority, new_is_completed, new_due_date);
 		t.setId(index);
 		if(l.updateItem(t) > 0)	
 			System.out.println("스케줄이 수정되었습니다.");
 
 	}
 	
+	public static void updateCompleted(TodoList l) {
+		
+		String new_done;
+		Scanner sc = new Scanner(System.in);
+		
+		System.out.print("[ 비완료 목록 ]\n");
+		int count=0;
+		for (TodoItem item: l.getCompleted(0)) {
+			System.out.println(item.toString());
+			count++;
+		}
+		for (TodoItem item: l.getCompleted(2)) {
+			System.out.println(item.toString());
+			count++;
+		}
+		
+		System.out.print("완료할 스케쥴의 갯수 > ");
+		int num = sc.nextInt();
+		System.out.print("완료할 스케쥴의 번호를 입력하시오 > ");
+		Integer index[] = new Integer[num];
+		for(int i=0; i<num; i++) {
+			 index[i] = sc.nextInt();
+		}
+		for(int i=0; i<num; i++) {
+			if(l.updateCompleted(index[i])>0) {
+				ArrayList<TodoItem> item = l.getListDone(index[i]);
+				System.out.println(item.toString());
+			}	
+		}
+		System.out.println("체크 되었습니다");
+	}
+
+	public static void deleteCompleted(TodoList l) {
+		
+		Scanner sc = new Scanner(System.in);
+		
+		System.out.print("[완료 목록]\n"); 
+		
+		int count=0;
+		for (TodoItem item: l.getCompleted(1)) {
+			System.out.println(item.toString());
+			count++;
+		}
+		System.out.print("[완료 삭제]\n"
+				+ "위 항목 전체를 삭제할까요? Yes: 1, No: 2 >");
+		int index = sc.nextInt();
+		if(index == 1) {
+			int a = l.deleteCompleted(index);
+			if(a>0)
+				System.out.println("삭제되었습니다");
+		}	
+		else {
+			System.out.println("메뉴로 돌아갑니다.");
+		}
+	}
+
 	public static void listAll(TodoList l) {
+		getLate(l);
 		System.out.printf("[전체 목록, 총 %d개]\n", l.getCount());
-		for(TodoItem item: l.getList()) {
+		for(TodoItem item: l.getLinked()) {
 			System.out.println(item.toString());
 		}
 		
+	}
+	
+	public static void getLate(TodoList l){
+		String date;
+		String current;
+		for(TodoItem item: l.getList()) {
+			
+			if(item.getIs_completed()==1) {
+				 l.getListDone(item.getId());
+				 continue;
+			}
+			date = item.getDue_date();
+			current = item.getCurrent_date();
+			
+			int DMten = Character.getNumericValue(date.charAt(5))*10;
+			int DMone = Character.getNumericValue(date.charAt(6));
+			
+			int CMten = Character.getNumericValue(current.charAt(5))*10;
+			int CMone = Character.getNumericValue(current.charAt(6));
+			
+			int DDten = Character.getNumericValue(date.charAt(8))*10;
+			int DDone = Character.getNumericValue(date.charAt(9));
+			
+			int CDten = Character.getNumericValue(current.charAt(8))*10;
+			int CDone = Character.getNumericValue(current.charAt(9));
+			
+			int index;
+			
+			if(DMten+DMone<CMten+CMone) {
+				index=item.getId();
+				l.updateLate(index);
+			}
+			else if(DDten+DDone<CDten+CDone) {
+				index=item.getId();
+				l.updateLate(index);
+			}
+		}
 	}
 	
 	public static void listAll(TodoList l, String orderby, int ordering) {
@@ -143,9 +276,9 @@ public class TodoUtil {
 		System.out.printf("총 %d개의 항목을 찾았습니다. \n", count);
 	}
 	
-	public static void findCateList(TodoList l, String cate) {
+	public static void findCateList(TodoList l, String name_cate) {
 		int count=0;
-		for (TodoItem item: l.getListCategory(cate)) {
+		for (TodoItem item: l.getListCategory(name_cate)) {
 			System.out.println(item.toString());
 			count++;
 		}

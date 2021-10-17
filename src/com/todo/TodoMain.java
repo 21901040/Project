@@ -81,7 +81,19 @@ public class TodoMain {
 			case "ls_cate":
 				TodoUtil.listCateAll(l);
 				break;
-
+				
+			case "add_cate":
+				TodoUtil.addCate(l);
+				break;
+				
+			case "ls_comp":
+				TodoUtil.deleteCompleted(l);
+				break;
+			
+			case "comp":
+				TodoUtil.updateCompleted(l);
+				break;
+				
 			case "exit":
 				System.out.println("종료합니다.");
 				//TodoUtil.saveList(l,"todolist.txt");
