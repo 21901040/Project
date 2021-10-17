@@ -453,15 +453,7 @@ public class TodoList {
 			ResultSet rs = stmt.executeQuery(sql);
 			
 			while(rs.next()) {
-				//int id = rs.getInt("id");
-				//String category = rs.getString("category");
-				//String title = rs.getString("title");
-				//String description = rs.getString("memo");
-				//String due_date = rs.getString("due_date");
-				//String current_date = rs.getString("current_date");
-				//TodoItem t= new TodoItem(title, description, category, due_date );
-				//t.setId(id);
-				//t.setCurrent_date(current_date);;
+			
 				String name_cate = rs.getString("name_cate");
 				list.add(name_cate);
 			}
